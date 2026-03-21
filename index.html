@@ -3,166 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌺 魚寶游到沖繩 2026</title>
+    <title>🌊 2026 沖繩自駕 11人團</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #fafafa; color: #333; }
-        .day-tab.active { border-bottom: 3px solid #ff8c00; color: #ff8c00; font-weight: bold; }
-        .content-section { display: none; }
-        .content-section.active { display: block; }
-        .nav-fixed { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-        .okinawa-icon { font-size: 1.2rem; margin-bottom: 4px; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #fdfdfd; color: #444; }
+        .day-tab.active { color: #0088cc; border-bottom: 3px solid #0088cc; font-weight: bold; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        .itinerary-day { display: none; }
+        .itinerary-day.active { display: block; }
+        .btn-action { @apply flex flex-col items-center justify-center w-12 h-12 rounded-full bg-slate-50 text-slate-400 text-[10px] hover:bg-sky-50 hover:text-sky-600; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
 <body class="pb-24">
 
-    <header class="p-6 text-center border-b bg-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-2 opacity-20"><i class="fa-solid fa-sun text-4xl text-orange-400"></i></div>
-        <div class="absolute bottom-0 left-0 p-2 opacity-20"><i class="fa-solid fa-water text-3xl text-blue-400"></i></div>
-        <h1 class="text-xl font-bold tracking-widest text-slate-700">OKINAWA TRIP</h1>
-        <p class="text-xs text-slate-400">2026.04.06 - 04.11</p>
+    <header class="p-5 text-center bg-white border-b relative">
+        <div class="absolute left-4 top-5 opacity-30 text-sky-400"><i class="fa-solid fa-water text-xl"></i></div>
+        <h1 class="text-lg font-bold tracking-widest uppercase">Okinawa Trip</h1>
+        <div class="absolute right-4 top-5 opacity-30 text-orange-400"><i class="fa-solid fa-sun text-xl"></i></div>
     </header>
 
-    <div class="sticky top-0 bg-white z-50 flex justify-between px-4 border-b text-sm shadow-sm overflow-x-auto">
-        <button onclick="showDay('day1')" class="day-tab py-4 px-2 active">MON<br><span class="text-[10px]">4/6</span></button>
-        <button onclick="showDay('day2')" class="day-tab py-4 px-2">TUE<br><span class="text-[10px]">4/7</span></button>
-        <button onclick="showDay('day3')" class="day-tab py-4 px-2">WED<br><span class="text-[10px]">4/8</span></button>
-        <button onclick="showDay('day4')" class="day-tab py-4 px-2">THU<br><span class="text-[10px]">4/9</span></button>
-        <button onclick="showDay('day5')" class="day-tab py-4 px-2">FRI<br><span class="text-[10px]">4/10</span></button>
-        <button onclick="showDay('day6')" class="day-tab py-4 px-2">SAT<br><span class="text-[10px]">4/11</span></button>
+    <div class="sticky top-0 bg-white/90 backdrop-blur-md z-50 flex justify-between px-2 border-b text-xs overflow-x-auto shadow-sm">
+        <button onclick="switchDay('d1')" class="day-tab py-4 px-3 active text-center">MON<br>4/6</button>
+        <button onclick="switchDay('d2')" class="day-tab py-4 px-3 text-center">TUE<br>4/7</button>
+        <button onclick="switchDay('d3')" class="day-tab py-4 px-3 text-center">WED<br>4/8</button>
+        <button onclick="switchDay('d4')" class="day-tab py-4 px-3 text-center">THU<br>4/9</button>
+        <button onclick="switchDay('d5')" class="day-tab py-4 px-3 text-center">FRI<br>4/10</button>
+        <button onclick="switchDay('d6')" class="day-tab py-4 px-3 text-center">SAT<br>4/11</button>
     </div>
 
-    <main class="p-4" id="main-content">
-        
-        <div id="itinerary-page">
-            <div id="day1" class="content-section active space-y-4">
-                <div class="card p-4">
-                    <div class="flex items-center gap-2 mb-4 text-orange-500 font-bold border-b pb-2">
-                        <i class="fa-solid fa-plane-arrival"></i> 4/6 第一天：抵達恩納
+    <main class="p-4">
+        <div id="itinerary-page" class="page-section active">
+            
+            <div id="d1" class="itinerary-day active space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 恩納村與超市採買</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">16:00</b><p class="text-sm font-medium">那霸機場取車 → 恩納</p></div>
+                    <div class="flex gap-2">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Naha+Airport" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a>
+                        <button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button>
                     </div>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex gap-4"><b>16:00</b> <span>那霸機場取車 → 前往恩納民宿</span></li>
-                        <li class="flex gap-4"><b>18:00</b> <span>MaxValu 伊嘉店 (24H 超市補貨)</span></li>
-                        <li class="flex gap-4 text-blue-600 font-medium"><b>19:30</b> <span>晚餐：外送美食 (民宿放鬆)</span></li>
-                    </ul>
                 </div>
-                <div class="flex gap-2">
-                    <a href="https://www.google.com/maps/dir/那霸機場/MaxValu+Igei" class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-location-arrow mr-1"></i> 導航</a>
-                    <button class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-image mr-1"></i> 新增照片</button>
-                </div>
-            </div>
-
-            <div id="day2" class="content-section space-y-4">
-                <div class="card p-4">
-                    <div class="flex items-center gap-2 mb-4 text-orange-500 font-bold border-b pb-2">
-                        <i class="fa-solid fa-shrimp"></i> 4/7 第二天：北部美景
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">18:00</b><p class="text-sm font-medium">MaxValu 伊嘉店 (補貨)</p></div>
+                    <div class="flex gap-2">
+                        <a href="https://www.google.com/maps/search/?api=1&query=MaxValu+Igei" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a>
+                        <button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button>
                     </div>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex gap-4"><b>Breakfast</b> <span class="text-sky-600">Pork Tamago Onigiri</span></li>
-                        <li class="flex gap-4"><b>10:30</b> <span>古宇利島 + 海洋塔</span></li>
-                        <li class="flex gap-4"><b>12:30</b> <span>午餐：岸本食堂 或 山原亞熱帶園</span></li>
-                        <li class="flex gap-4"><b>14:30</b> <span>美麗海水族館 (部瀨名玻璃船備選)</span></li>
-                        <li class="flex gap-4"><b>18:00</b> <span>晚餐：名護/恩納自由活動</span></li>
-                    </ul>
                 </div>
-                <div class="flex gap-2">
-                    <a href="https://www.google.com/maps/dir/古宇利島/美麗海水族館" class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-location-arrow mr-1"></i> 導航</a>
-                    <button class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-image mr-1"></i> 新增照片</button>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-orange-500">19:30</b><p class="text-sm font-medium">晚餐：外送回民宿</p></div>
+                    <div class="flex gap-2"><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
                 </div>
             </div>
 
-            <div id="day3" class="content-section space-y-4">
-                <div class="card p-4">
-                    <div class="flex items-center gap-2 mb-4 text-orange-500 font-bold border-b pb-2">
-                        <i class="fa-solid fa-camera"></i> 4/8 第三天：中部風情
-                    </div>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex gap-4"><b>09:00</b> <span>萬座毛景觀</span></li>
-                        <li class="flex gap-4"><b>10:00</b> <span>琉球村文化體驗</span></li>
-                        <li class="flex gap-4"><b>13:00</b> <span>午餐：A&W 漢堡-牧港店</span></li>
-                        <li class="flex gap-4"><b>14:30</b> <span>港川外人住宅 (香水店/水果塔)</span></li>
-                        <li class="flex gap-4"><b>16:00</b> <span>PARCO CITY 逛街</span></li>
-                    </ul>
+            <div id="d2" class="itinerary-day space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 北部水族館之旅</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">早餐</b><p class="text-sm font-medium">Pork Tamago Onigiri</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Pork+Tamago+Onigiri" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
                 </div>
-                <div class="flex gap-2">
-                    <a href="https://www.google.com/maps/dir/萬座毛/琉球村/A%26W+牧港店/港川外人住宅" class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-location-arrow mr-1"></i> 導航</a>
-                    <button class="flex-1 bg-slate-100 py-3 rounded-lg text-center text-xs font-bold"><i class="fa-solid fa-image mr-1"></i> 新增照片</button>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">10:30</b><p class="text-sm font-medium">古宇利島+海洋塔</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Kouri+Ocean+Tower" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">12:30</b><p class="text-sm font-medium">岸本食堂 (蕎麥麵)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Kishimoto+Shokudo" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">14:30</b><p class="text-sm font-medium">美麗海水族館/玻璃船</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Churaumi+Aquarium" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
                 </div>
             </div>
 
+            <div id="d3" class="itinerary-day space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 中部網美店與購物</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">09:00</b><p class="text-sm font-medium">萬座毛景點</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Manzamo" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">10:00</b><p class="text-sm font-medium">琉球村文化體驗</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Ryukyu+Mura" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">13:00</b><p class="text-sm font-medium">A&W 漢堡-牧港店</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=A%26W+Makiminato" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">14:30</b><p class="text-sm font-medium">港川外人住宅 (水果塔)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Minatogawa+Stateside+Town" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">16:00</b><p class="text-sm font-medium">PARCO CITY 逛街</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=PARCO+CITY+Okinawa" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
             </div>
 
-        <div id="shopping-page" class="hidden">
-            <h2 class="font-bold text-lg mb-4 ml-2">🛍️ 必買清單備忘</h2>
-            <div class="card p-10 text-center text-slate-300 border-dashed">
-                尚未加入清單項目
+            <div id="d4" class="itinerary-day space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 南下那霸與美國村</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">11:00</b><p class="text-sm font-medium">美國村 (Blue Seal)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=American+Village+Okinawa" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">14:00</b><p class="text-sm font-medium">Ashibinaa Outlet</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Ashibinaa+Outlet" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">19:00</b><p class="text-sm font-medium">國際通 (島唄餐廳)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Kokusai+Dori" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+            </div>
+
+            <div id="d5" class="itinerary-day space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 古蹟與自然洞窟</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">09:00</b><p class="text-sm font-medium">首里城公園</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Shuri+Castle" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">10:30</b><p class="text-sm font-medium">玉泉洞 (文化王國)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Gyokusendo+Cave" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">13:00</b><p class="text-sm font-medium">系滿魚市場 (午餐)</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Itoman+Fish+Market" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">15:00</b><p class="text-sm font-medium">瀨長島 Umikaji Terrace</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Umikaji+Terrace" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+            </div>
+
+            <div id="d6" class="itinerary-day space-y-3">
+                <div class="bg-sky-50 text-sky-700 p-2 rounded text-xs font-bold mb-4">📍 市場漫遊與賦歸</div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">08:30</b><p class="text-sm font-medium">旅の終わりの朝ごはん</p></div>
+                    <div class="flex gap-2"><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">10:00</b><p class="text-sm font-medium">第一牧志公設市場</p></div>
+                    <div class="flex gap-2"><a href="https://www.google.com/maps/search/?api=1&query=Makishi+Public+Market" class="btn-action"><i class="fa-solid fa-location-arrow text-sm"></i>導航</a><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
+                <div class="schedule-item flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div><b class="text-blue-500">14:45</b><p class="text-sm font-medium">抵達機場還車</p></div>
+                    <div class="flex gap-2"><button class="btn-action"><i class="fa-solid fa-camera text-sm"></i>照片</button></div>
+                </div>
             </div>
         </div>
 
-        <div id="billing-page" class="hidden">
-            <h2 class="font-bold text-lg mb-4 ml-2">💰 11 人分帳系統</h2>
-            <div class="card p-4 space-y-4">
-                <input type="text" placeholder="消費項目" class="w-full border-b py-2 text-sm outline-none">
-                <input type="number" placeholder="日幣總額" class="w-full border-b py-2 text-sm outline-none">
-                <div>
-                    <p class="text-[10px] text-slate-400 mb-2 font-bold">誰要分擔？</p>
-                    <div id="memberList" class="grid grid-cols-3 gap-2">
-                        </div>
-                </div>
-                <button class="w-full bg-slate-800 text-white py-3 rounded-xl text-sm font-bold">儲存帳目</button>
-            </div>
+        <div id="billing-page" class="page-section">
+            <h2 class="font-bold mb-4">💰 11人精確記帳</h2>
+            <div id="memberChecklist" class="grid grid-cols-3 gap-2 text-[11px]"></div>
         </div>
-
     </main>
 
-    <nav class="nav-fixed flex justify-around items-center py-3">
-        <button onclick="showPage('itinerary')" class="flex flex-col items-center text-orange-500">
-            <i class="fa-solid fa-map okinawa-icon"></i>
-            <span class="text-[10px]">行程概覽</span>
-        </button>
-        <button onclick="showPage('shopping')" class="flex flex-col items-center text-slate-400">
-            <i class="fa-solid fa-bag-shopping okinawa-icon"></i>
-            <span class="text-[10px]">必買清單</span>
-        </button>
-        <button onclick="showPage('billing')" class="flex flex-col items-center text-slate-400">
-            <i class="fa-solid fa-calculator okinawa-icon"></i>
-            <span class="text-[10px]">記帳分擔</span>
-        </button>
+    <nav class="nav-bar flex justify-around py-3">
+        <button onclick="showPage('itinerary')" class="flex flex-col items-center text-sky-600"><i class="fa-solid fa-plane"></i><span class="text-[10px]">行程</span></button>
+        <button onclick="showPage('shopping')" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-cart-shopping"></i><span class="text-[10px]">必買</span></button>
+        <button onclick="showPage('billing')" class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-coins"></i><span class="text-[10px]">記帳</span></button>
     </nav>
 
     <script>
-        // 日曆分頁切換
-        function showDay(dayId) {
-            document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.content-section').forEach(c => c.classList.remove('active'));
-            
-            event.currentTarget.classList.add('active');
+        function switchDay(dayId) {
+            document.querySelectorAll('.itinerary-day').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.day-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(dayId).classList.add('active');
-            showPage('itinerary'); // 切換日期時確保是在行程頁面
+            event.currentTarget.classList.add('active');
         }
 
-        // 底部導航分頁切換
         function showPage(pageId) {
-            document.getElementById('itinerary-page').classList.add('hidden');
-            document.getElementById('shopping-page').classList.add('hidden');
-            document.getElementById('billing-page').classList.add('hidden');
-            document.getElementById(pageId + '-page').classList.remove('hidden');
-
-            document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-orange-500', 'text-slate-400'));
-            event.currentTarget.classList.replace('text-slate-400', 'text-orange-500');
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId + '-page').classList.add('active');
         }
 
-        // 正確的 11 人名單
         const members = ['David', 'Sherry', '鈺婷', '嘉', '信翰', '阿德', '小貞', '語彤', '宇詰', '竫椏', '亮勳'];
-        const memberList = document.getElementById('memberList');
-        members.forEach(name => {
-            const label = document.createElement('label');
-            label.className = 'flex items-center gap-1 bg-slate-50 p-2 rounded text-[11px]';
-            label.innerHTML = `<input type="checkbox" checked> <span>${name}</span>`;
-            memberList.appendChild(label);
+        const checklist = document.getElementById('memberChecklist');
+        members.forEach(m => {
+            checklist.innerHTML += `<label class="bg-gray-100 p-2 rounded flex items-center gap-1"><input type="checkbox" checked> ${m}</label>`;
         });
     </script>
 </body>
