@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Okinawa 沖繩夏日漫遊 (11人連線版)</title>
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <style>
+        :root { 
+            --bg-color: #F4F9F9; 
+            --text-main: #2C3E50; 
+            --text-sub: #7F8C8D; 
+            --primary: #008B8B; /* 沖繩海洋藍 */
+            --primary-light: #E0F2F1;
+            --border: #E5E5EA; 
+            --tag-food: #E67E22; 
+            --tag-menu: #34495E; 
+            --tag-souvenir: #27AE60; 
+            --tag-booking: #D35400; 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "SF Pro TC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; }
+        
+        /* 頂部滑動導航列 */
+        .top-nav-slider { display: flex; overflow-x: auto; padding: calc(env(safe-area-inset-top) + 15px) 15px 10px; background: #FFF; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 5px rgba(0,139,139,0.1); scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .top-nav-slider::-webkit-scrollbar { display: none; }
+        .nav-slider-item { flex: 0 0 auto; text-align: center; padding: 5px 15px; opacity: 0.5; transition: 0.3s; scroll-snap-align: center; cursor: pointer; white-space: nowrap; }
+        .nav-slider-item.active { opacity: 1; border-bottom: 3px solid var(--primary); font-weight: bold; color: var(--primary); }
+        .date-day { font-size: 0.75rem; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;}
+        .date-num { font-size: 1.5rem; font-weight: 400; font-family: serif; margin-top: 2px; }
+        .shop-cat-title { font-size: 1.1rem; padding: 5px 0; }
+
+        .header-decor { text-align: center; padding: 10px 0 0; font-size: 1.2rem; background: #FFF; color: var(--primary); letter-spacing: 2px; }
+        .day-header { padding: 15px 20px 10px; background: #FFF; border-bottom: 1px dashed var(--border); }
+        .day-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 5px; color: var(--primary); }
+        .weather-box { font-size: 0.9rem; color: var(--text-sub); display: flex; align-items: center; gap: 5px; }
+
+        .tab-content { display: none; animation: fadeEffect 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeEffect { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .timeline { padding: 20px; }
+        .stop { position: relative; padding-left: 25px; margin-bottom: 25px; }
+        .stop::before { content: ''; position: absolute; left: 0; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); z-index: 2; box-shadow: 0 0 0 3px var(--primary-light); }
+        .stop::after { content: ''; position: absolute; left: 5px; top: 15px; bottom: -25px; width: 2px; background: var(--border); z-index: 1; }
+        .stop:last-child::after { display: none; }
+        
+        .time { font-size: 0.85rem; color: var(--text-sub); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;}
+        .spot-card { background: #FFF; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #E8F0F0; }
+        .spot-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; color: #34495E;}
+        .spot-desc { font-size: 0.9rem; color: #555; line-height: 1.6; margin-bottom: 10px;}
+        
+        .subway { padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; margin-bottom: 6px; letter-spacing: 0.5px;}
+        .bg-car { background-color: #2980B9; } .bg-flight { background-color: #8E44AD; } .bg-food { background-color: #E67E22; } .bg-shop { background-color: #16A085; }
+
+        .guide-box { background-color: var(--primary-light); padding: 10px 12px; border-radius: 8px; margin-top: 6px; font-size: 0.85rem; line-height: 1.5; color: #2C3E50; border-left: 4px solid var(--primary);}
+        .tag { padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white; display: inline-block; margin-bottom: 4px; margin-right: 4px;}
+        .tag.food { background-color: var(--tag-food); }
+        
+        /* 底部五格導航 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.02);}
+        .nav-item { text-align: center; color: var(--text-sub); font-size: 0.65rem; cursor: pointer; flex: 1; transition: 0.2s;} 
+        .nav-item.active { color: var(--primary); font-weight: 700; transform: translateY(-2px);} 
+        .nav-icon { font-size: 1.4rem; display: block; margin-bottom: 3px; }
+
+        /* 記帳本樣式 */
+        .accounting-panel{padding:20px;}
+        .summary-card{background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);color:white;padding:25px 20px;border-radius:16px;margin-bottom:20px;text-align:center;box-shadow:0 6px 15px rgba(0,139,139,0.2);}
+        .total-amount{font-size:2.2rem;font-weight:700;margin:10px 0;}
+        .add-expense-form{background:#FFF;padding:18px;border-radius:12px;margin-bottom:20px;box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+        .form-group{margin-bottom:15px;}
+        .form-group label{display:block;font-size:0.85rem;color:#34495E;margin-bottom:6px; font-weight:600;}
+        .form-group input, .form-group select{width:100%;padding:12px;border:1px solid #D5E1E1;border-radius:8px;font-size:1rem;-webkit-appearance:none; background: #F9FCFC;}
+        
+        /* 11人分攤勾選框樣式 */
+        .split-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+        .split-checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; background: #F4F9F9; padding: 8px; border-radius: 6px; border: 1px solid #E0F2F1; cursor: pointer;}
+        .split-checkbox-label input { width: 16px; height: 16px; accent-color: var(--primary); margin: 0;}
+        .btn-select-all { background: #E0F2F1; color: var(--primary); border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-bottom: 5px;}
+
+        .btn-submit{width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,139,139,0.3); margin-top: 10px;}
+        .expense-item{background:#FFF;padding:15px;border-radius:12px;border:1px solid #E8F0F0; display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+        .exp-detail{display:flex;flex-direction:column; flex: 1;}
+        .exp-title{font-weight:700;font-size:1rem; color: #2C3E50;}
+        .exp-meta{font-size:0.8rem;color:var(--text-sub);margin-top:4px; line-height: 1.4;}
+        .exp-price-box { text-align: right; }
+        .exp-price{font-weight:bold;font-size:1.1rem; color: var(--primary);}
+        
+        /* 結算結果卡片 */
+        .settlement-card { background: #FFF; border: 2px solid var(--primary); border-radius: 12px; padding: 15px; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);}
+        .settlement-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-align: center; border-bottom: 1px solid #E0F2F1; padding-bottom: 10px;}
+        .settlement-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #E0F2F1; font-size: 0.95rem; font-weight: 600;}
+        .settlement-row:last-child { border-bottom: none; }
+        .settlement-amount { color: #E74C3C; font-family: monospace; font-size: 1.05rem;}
+
+        /* 行程導航與日記功能樣式 */
+        .spot-actions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px dashed #E5E5EA; padding-top: 12px; justify-content: flex-end; }
+        .btn-action { text-decoration: none; font-size: 0.85rem; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; outline: none; display: flex; align-items: center; gap: 6px; justify-content: center; transition: 0.2s;}
+        .btn-map-quick { background: #E3F2FD; color: #1976D2; flex:1;}
+        .btn-diary { background: #FCE4EC; color: #C2185B; flex:1;}
+        
+        .diary-area { margin-top: 12px; padding: 12px; background: #F9FCFC; border-radius: 8px; border: 1px solid #E0F2F1; animation: fadeEffect 0.3s; }
+        .diary-text { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.95rem; resize: none; min-height: 80px; margin-bottom: 10px; box-sizing: border-box; background: #FFF;}
+        .diary-text:focus { outline: none; border-color: var(--primary); }
+        
+        /* 自訂上傳與刪除按鈕樣式 */
+        .file-upload-wrapper { display: flex; gap: 10px; margin-bottom: 10px; }
+        .upload-container { position: relative; overflow: hidden; display: inline-block; flex:1; }
+        .btn-upload { background: white; border: 1px solid var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; height: 100%; font-weight: bold;}
+        .upload-container input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+        .btn-delete-photo { background: #FFF0F0; border: 1px solid #FFD6D6; color: #E53935; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; display: none; align-items: center; justify-content: center; gap: 5px; cursor: pointer; flex:1;}
+        
+        .diary-img-preview { max-width: 100%; max-height: 250px; border-radius: 8px; display: none; margin-top: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); object-fit: cover; }
+        
+        /* 連線狀態提示 */
+        #sync-status { text-align: center; font-size: 0.8rem; color: #10B981; padding: 6px; background: #E8F5E9; display: none; font-weight: bold; }
+        .btn-maps-main { display: block; text-align: center; background: var(--primary); color: #FFF; padding: 14px; border-radius: 10px; text-decoration: none; font-size: 1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,139,139,0.2); margin-top:10px;}
+    </style>
+</head>
+<body>
+    <div class="header-decor">☀️ OKINAWA 🌊</div>
+    <div class="top-nav-slider" id="dateNav" style="display: flex;">
+        <div class="nav-slider-item active" onclick="showDay('d1', this)"><div class="date-day">MON</div><div class="date-num">06</div></div>
+        <div class="nav-slider-item" onclick="showDay('d2', this)"><div class="date-day">TUE</div><div class="date-num">07</div></div>
+        <div class="nav-slider-item" onclick="showDay('d3', this)"><div class="date-day">WED</div><div class="date-num">08</div></div>
+        <div class="nav-slider-item" onclick="showDay('d4', this)"><div class="date-day">THU</div><div class="date-num">09</div></div>
+        <div class="nav-slider-item" onclick="showDay('d5', this)"><div class="date-day">FRI</div><div class="date-num">10</div></div>
+        <div class="nav-slider-item" onclick="showDay('d6', this)"><div class="date-day">SAT</div><div class="date-num">11</div></div>
+    </div>
+
+    <div class="top-nav-slider" id="shopNav" style="display: none;"></div>
+
+    <div id="view-itinerary" style="display: block;">
+        <div id="d1" class="tab-content active">
+            <div class="day-header"><div class="day-title">Day 1｜抵達沖繩 恩納村</div><div class="weather-box" id="w-d1"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">16:00</div><div class="spot-card"><div class="subway bg-flight">✈️ 航班</div><div class="spot-title">抵達那霸機場</div><div class="spot-desc">機場取車，準備出發前往恩納村！</div></div></div>
+                <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-shop">🛒 購物</div><div class="spot-title">MaxValu 伊嘉店</div><div class="guide-box">超市補貨 (24小時營業)</div></div></div>
+                <div class="stop"><div class="time">19:30</div><div class="spot-card"><div class="subway bg-food">🍱 晚餐</div><div class="spot-title">晚餐：外送</div><div class="spot-desc">享受第一晚的悠閒時光</div></div></div>
+            </div>
+        </div>
+        
+        <div id="d2" class="tab-content">
+            <div class="day-header"><div class="day-title">Day 2｜古宇利島與海洋之美</div><div class="weather-box" id="w-d2"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">08:30</div><div class="spot-card"><div class="subway bg-food">🍙 早餐</div><div class="spot-title">Pork Tamago Onigiri</div><div class="guide-box"><span class="tag food">必吃</span> 沖繩經典豬肉蛋飯糰</div></div></div>
+                <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">古宇利島 + 海洋塔</div><div class="spot-desc">開車跨越絕美古宇利大橋，俯瞰漸層沖繩藍</div></div></div>
+                <div class="stop"><div class="time">12:30</div><div class="spot-card"><div class="subway bg-food">🍜 午餐</div><div class="spot-title">岸本食堂 或 亞熱帶園</div><div class="guide-box"><span class="tag food">推薦</span> 百年木灰蕎麥麵 / 山原亞熱帶園蕎麥麵</div></div></div>
+                <div class="stop"><div class="time">14:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">美麗海水族館</div><div class="spot-desc">看黑潮之海的鯨鯊！(備案：部瀨名搭玻璃船)</div></div></div>
+                <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-food">🍽️ 晚餐</div><div class="spot-title">晚餐：自由活動</div></div></div>
+            </div>
+        </div>
+
+        <div id="d3" class="tab-content">
+            <div class="day-header"><div class="day-title">Day 3｜打卡秘境與逛街血拼</div><div class="weather-box" id="w-d3"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">09:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">萬座毛</div><div class="spot-desc">欣賞大自然的鬼斧神工，象鼻岩石</div></div></div>
+                <div class="stop"><div class="time">10:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">琉球村</div><div class="spot-desc">體驗傳統琉球文化與古民家</div></div></div>
+                <div class="stop"><div class="time">13:00</div><div class="spot-card"><div class="subway bg-food">🍔 午餐</div><div class="spot-title">A&W漢堡 牧港店</div><div class="guide-box"><span class="tag food">必吃</span> 沖繩限定美式復古漢堡</div></div></div>
+                <div class="stop"><div class="time">14:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">港川外人住宅</div><div class="guide-box">✅ 做香水的小店<br>✅ 彩色小屋拍照<br>✅ 甜點 oHacorté 水果塔</div></div></div>
+                <div class="stop"><div class="time">16:00</div><div class="spot-card"><div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">PARCO CITY 逛街</div><div class="spot-desc">沖繩最大級海岸複合商場，準備大採購</div></div></div>
+                <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-food">🥘 晚餐</div><div class="spot-title">民宿開伙</div><div class="spot-desc">San-A超市買食材回民宿煮</div></div></div>
+            </div>
+        </div>
+
+        <div id="d4" class="tab-content">
+            <div class="day-header"><div class="day-title">Day 4｜美式風情與 Outlet</div><div class="weather-box" id="w-d4"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">離開恩納往南</div><div class="spot-desc">辦理退房</div></div></div>
+                <div class="stop"><div class="time">11:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">美國村</div><div class="guide-box">✅ King Side Breakfast & Burger<br>✅ Blue Seal 冰淇淋 (北谷店)</div></div></div>
+                <div class="stop"><div class="time">14:00</div><div class="spot-card"><div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">Ashibinaa Outlet</div><div class="spot-desc">精品折扣尋寶去</div></div></div>
+                <div class="stop"><div class="time">17:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">入住那霸飯店</div></div></div>
+                <div class="stop"><div class="time">19:00</div><div class="spot-card"><div class="subway bg-food">🎶 晚餐</div><div class="spot-title">國際通 (島唄餐廳)</div><div class="spot-desc">邊聽三線琴邊享用沖繩料理</div></div></div>
+            </div>
+        </div>
+
+        <div id="d5" class="tab-content">
+            <div class="day-header"><div class="day-title">Day 5｜歷史文化與瀨長島</div><div class="weather-box" id="w-d5"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">09:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">首里城</div><div class="spot-desc">世界文化遺產，琉球王國的榮耀</div></div></div>
+                <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">玉泉洞</div><div class="spot-desc">日本第二大鐘乳石洞</div></div></div>
+                <div class="stop"><div class="time">13:00</div><div class="spot-card"><div class="subway bg-food">🦞 午餐</div><div class="spot-title">系滿魚市場</div><div class="guide-box"><span class="tag food">必吃</span> 新鮮海鮮、生魚片、焗烤龍蝦</div></div></div>
+                <div class="stop"><div class="time">14:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">達摩寺</div><div class="spot-desc">祈求好運的特色寺廟</div></div></div>
+                <div class="stop"><div class="time">15:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">瀨長島</div><div class="spot-desc">被稱為沖繩小希臘，看海看飛機起降的絕佳地點</div></div></div>
+                <div class="stop"><div class="time">19:00</div><div class="spot-card"><div class="subway bg-food">🍽️ 晚餐</div><div class="spot-title">晚餐：自由活動</div></div></div>
+            </div>
+        </div>
+
+        <div id="d6" class="tab-content">
+            <div class="day-header"><div class="day-title">Day 6｜市場巡禮與歸途</div><div class="weather-box" id="w-d6"></div></div>
+            <div class="timeline">
+                <div class="stop"><div class="time">08:30</div><div class="spot-card"><div class="subway bg-food">🍳 早餐</div><div class="spot-title">旅の終わりの朝ごはん</div><div class="spot-desc">享受旅程最後的美好早餐</div></div></div>
+                <div class="stop"><div class="time">10:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">第一牧志公設市場</div><div class="spot-desc">沖繩人的廚房，或是自由活動最後採買</div></div></div>
+                <div class="stop"><div class="time">14:45</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">抵達機場還車</div></div></div>
+                <div class="stop"><div class="time">16:45</div><div class="spot-card"><div class="subway bg-flight">✈️ 航班</div><div class="spot-title">飛機起飛</div><div class="spot-desc">帶著滿滿回憶平安回家！</div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-maps" style="display: none; padding: 20px;">
+        <div class="day-title" style="text-align: center; margin-bottom: 20px;">🗺️ 沖繩每日導航路線包</div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🚗 Day 1｜機場抵達恩納</div><a href="https://www.google.com/maps/dir/Naha+Airport/MaxValu+Ika/Enna,+Okinawa" target="_blank" class="btn-maps-main">📍 點我開啟 D1 導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏝️ Day 2｜古宇利與水族館</div><a href="https://www.google.com/maps/dir/Enna,+Okinawa/Kouri+Island/Kishimoto+Shokudo/Okinawa+Churaumi+Aquarium" target="_blank" class="btn-maps-main">📍 點我開啟 D2 導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🍔 Day 3｜外人住宅與購物</div><a href="https://www.google.com/maps/dir/Manzamo/Ryukyu+Mura/A%26W+Makiminato/Minatogawa+Stateside+Town/PARCO+CITY" target="_blank" class="btn-maps-main">📍 點我開啟 D3 導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🎡 Day 4｜美國村與國際通</div><a href="https://www.google.com/maps/dir/Enna/American+Village/Ashibinaa+Outlet/Kokusai+Dori" target="_blank" class="btn-maps-main">📍 點我開啟 D4 導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏯 Day 5｜首里城與瀨長島</div><a href="https://www.google.com/maps/dir/Shuri+Castle/Gyokusendo/Itoman+Fish+Market/Daruma-dera/Senagajima" target="_blank" class="btn-maps-main">📍 點我開啟 D5 導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🐟 Day 6｜牧志市場與機場</div><a href="https://www.google.com/maps/dir/Makishi+Public+Market/Naha+Airport" target="_blank" class="btn-maps-main">📍 點我開啟 D6 導航</a></div>
+    </div>
+
+    <div id="view-accounting" style="display: none;">
+        <div id="sync-status">🟢 雲端同步連線中...</div>
+        <div class="accounting-panel">
+            <div class="summary-card">
+                <div style="font-size:0.95rem; opacity:0.9;">旅費總計 (TWD)</div>
+                <div class="total-amount" id="calc-total-twd">$0</div>
+            </div>
+            
+            <div class="add-expense-form">
+                <h3 style="margin-bottom: 15px; font-size: 1.15rem; color: var(--primary);"><span style="font-size:1.3rem;">📝</span> 新增一筆花費</h3>
+                <div class="form-group"><label>消費項目名稱</label><input type="text" id="exp-name" placeholder="例如：D1 晚餐外送"></div>
+                <div class="form-group"><label>金額 (日幣 JPY)</label><input type="number" id="exp-amount" placeholder="輸入日幣總金額"></div>
+                <div class="form-group"><label>當前匯率 (日幣轉台幣)</label><input type="number" id="exp-rate" value="0.21" step="0.001"></div>
+                
+                <div class="form-group"><label>👤 誰先代墊付款？</label>
+                    <select id="exp-payer">
+                        <option value="David">David</option><option value="Sherry">Sherry</option>
+                        <option value="鈺婷">鈺婷</option><option value="嘉">嘉</option>
+                        <option value="信翰">信翰</option><option value="阿德">阿德</option>
+                        <option value="小貞">小貞</option><option value="語彤">語彤</option>
+                        <option value="宇詰">宇詰</option><option value="竫椏">竫椏</option>
+                        <option value="亮勳">亮勳</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 5px;"><label>👥 誰要參與分攤這筆帳？</label></div>
+                <button class="btn-select-all" onclick="toggleAllCheckboxes()">☑️ 全選 / 全不選</button>
+                <div class="split-grid" id="split-checkboxes"></div>
+                
+                <button class="btn-submit" onclick="addExpense()">上傳至雲端記帳本</button>
+            </div>
+            
+            <div id="settlement-container" class="settlement-card" style="display: none;">
+                <div class="settlement-title">💰 最終還款結算指示</div>
+                <div id="settlement-list"></div>
+            </div>
+
+            <h3 style="margin: 25px 0 10px; font-size: 1rem; color:var(--text-sub);">🧾 所有消費明細</h3>
+            <div class="expense-list" id="expense-list-container"></div>
+        </div>
+    </div>
+
+    <div id="view-shopping" style="display: none;">
+        <div id="sync-status-shop" style="text-align: center; font-size: 0.8rem; color: #10B981; padding: 6px; background: #E8F5E9; display: none; font-weight: bold;">🟢 雲端購物清單同步中...</div>
+        <div style="padding: 20px 20px 0;">
+            <div class="add-expense-form" style="margin-bottom: 10px;">
+                <h3 style="margin-bottom: 10px; font-size: 1rem; color: var(--primary);">新增必買項目</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="new-shop-item" placeholder="例如：雪肌精、御守..." style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                    <button class="btn-submit" onclick="addShoppingItem()" style="width: auto; padding: 10px 20px; margin-top:0;">新增</button>
+                </div>
+            </div>
+        </div>
+        <div class="timeline" id="shopping-list-container" style="padding-top: 0;"></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-itinerary" onclick="switchMainTab('itinerary')"><span class="nav-icon">🗺️</span>行程</div>
+        <div class="nav-item" id="nav-maps" onclick="switchMainTab('maps')"><span class="nav-icon">📍</span>導航</div>
+        <div class="nav-item" id="nav-shopping" onclick="switchMainTab('shopping')"><span class="nav-icon">🛍️</span>必買</div>
+        <div class="nav-item" id="nav-accounting" onclick="switchMainTab('accounting')"><span class="nav-icon">💰</span>記帳本</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ-IJYr22rJtnhbGZDt65eAmNw-8c0Px0",
+            authDomain: "okinawa-54c4a.firebaseapp.com",
+            projectId: "okinawa-54c4a",
+            storageBucket: "okinawa-54c4a.firebasestorage.app",
+            messagingSenderId: "34027040193",
+            appId: "1:34027040193:web:c597b2023d90c3462cd340",
+            measurementId: "G-MEGWG8RNS8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const members = ['David', 'Sherry', '鈺婷', '嘉', '信翰', '阿德', '小貞', '語彤', '宇詰', '竫椏', '亮勳'];
+
+        const splitGrid = document.getElementById('split-checkboxes');
+        members.forEach(member => {
+            const label = document.createElement('label');
+            label.className = 'split-checkbox-label';
+            label.innerHTML = `<input type="checkbox" value="${member}" class="split-cb" checked> ${member}`;
+            splitGrid.appendChild(label);
+        });
+
+        window.toggleAllCheckboxes = function() {
+            const checkboxes = document.querySelectorAll('.split-cb');
+            const anyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
+            checkboxes.forEach(cb => cb.checked = anyUnchecked);
+        }
+
+        window.showDay = function(dayId, element) {
+            document.querySelectorAll('#dateNav .nav-slider-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById(dayId).classList.add('active');
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.switchMainTab = function(tabName) {
+            document.getElementById('view-itinerary').style.display = tabName === 'itinerary' ? 'block' : 'none';
+            document.getElementById('view-maps').style.display = tabName === 'maps' ? 'block' : 'none';
+            document.getElementById('view-shopping').style.display = tabName === 'shopping' ? 'block' : 'none';
+            document.getElementById('view-accounting').style.display = tabName === 'accounting' ? 'block' : 'none';
+            
+            document.getElementById('dateNav').style.display = tabName === 'itinerary' ? 'flex' : 'none';
+
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-' + tabName).classList.add('active');
+            
+            if (tabName === 'accounting') {
+                document.getElementById('sync-status').style.display = 'block';
+                setTimeout(() => { document.getElementById('sync-status').style.display = 'none'; }, 2500);
+            }
+            if (tabName === 'shopping') {
+                document.getElementById('sync-status-shop').style.display = 'block';
+                setTimeout(() => { document.getElementById('sync-status-shop').style.display = 'none'; }, 2500);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function compressAndSaveImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600; 
+                    let width = img.width; let height = img.height;
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.6));
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const spotCards = document.querySelectorAll('#view-itinerary .spot-card');
+            spotCards.forEach((card, index) => {
+                const titleEl = card.querySelector('.spot-title');
+                if (!titleEl) return;
+                const spotName = titleEl.innerText.trim();
+
+                const actionBar = document.createElement('div');
+                actionBar.className = 'spot-actions';
+
+                const mapBtn = document.createElement('a');
+                mapBtn.className = 'btn-action btn-map-quick';
+                mapBtn.href = `https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(spotName + ' 沖繩')}`;
+                mapBtn.target = '_blank'; mapBtn.innerHTML = '🗺️ 導航';
+
+                const diaryBtn = document.createElement('button');
+                diaryBtn.className = 'btn-action btn-diary';
+                diaryBtn.innerHTML = '📷 紀錄';
+
+                actionBar.appendChild(diaryBtn); actionBar.appendChild(mapBtn);
+                card.appendChild(actionBar);
+
+                const diaryArea = document.createElement('div');
+                diaryArea.className = 'diary-area'; diaryArea.style.display = 'none';
+
+                const textArea = document.createElement('textarea');
+                textArea.className = 'diary-text'; textArea.placeholder = '寫下這站的趣事或花費...';
+                if(localStorage.getItem(`oki_diary_text_${index}`)) textArea.value = localStorage.getItem(`oki_diary_text_${index}`);
+                textArea.addEventListener('input', (e) => localStorage.setItem(`oki_diary_text_${index}`, e.target.value));
+
+                const uploadWrapper = document.createElement('div');
+                uploadWrapper.className = 'file-upload-wrapper';
+                
+                const uploadContainer = document.createElement('div');
+                uploadContainer.className = 'upload-container';
+                uploadContainer.innerHTML = `<div class="btn-upload">📎 新增照片</div>`;
+                
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file'; fileInput.accept = 'image/*';
+                uploadContainer.appendChild(fileInput);
+
+                const deleteBtn = document.createElement('div');
+                deleteBtn.className = 'btn-delete-photo'; deleteBtn.innerHTML = '🗑️ 移除照片';
+
+                uploadWrapper.appendChild(uploadContainer); uploadWrapper.appendChild(deleteBtn);
+
+                const imgPreview = document.createElement('img');
+                imgPreview.className = 'diary-img-preview';
+                
+                if(localStorage.getItem(`oki_diary_img_${index}`)) {
+                    imgPreview.src = localStorage.getItem(`oki_diary_img_${index}`);
+                    imgPreview.style.display = 'block'; deleteBtn.style.display = 'flex';
+                }
+
+                fileInput.addEventListener('change', (e) => {
+                    if(e.target.files[0]) {
+                        compressAndSaveImage(e.target.files[0], (dataUrl) => {
+                            imgPreview.src = dataUrl; imgPreview.style.display = 'block'; deleteBtn.style.display = 'flex';
+                            try { localStorage.setItem(`oki_diary_img_${index}`, dataUrl); } catch (err) { alert('手機暫存空間已滿！'); }
+                        });
+                    }
+                });
+
+                deleteBtn.addEventListener('click', () => {
+                    if(confirm('確定要移除這張照片嗎？')) {
+                        localStorage.removeItem(`oki_diary_img_${index}`);
+                        imgPreview.src = ''; imgPreview.style.display = 'none'; deleteBtn.style.display = 'none'; fileInput.value = '';
+                    }
+                });
+
+                diaryArea.appendChild(textArea); diaryArea.appendChild(uploadWrapper); diaryArea.appendChild(imgPreview);
+                card.appendChild(diaryArea);
+                diaryBtn.addEventListener('click', () => diaryArea.style.display = diaryArea.style.display === 'none' ? 'block' : 'none');
+            });
+        });
+
+        // =======================
+        // FIREBASE 必買清單邏輯更新
+        // =======================
+        let shoppingData = []; 
+        const qShop = query(collection(db, "okinawa_shopping"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(qShop, (snapshot) => {
+            shoppingData = [];
+            snapshot.forEach((doc) => {
+                shoppingData.push({ id: doc.id, ...doc.data() });
+            });
+            renderShoppingList();
+        });
+
+        function renderShoppingList() {
+            const container = document.getElementById('shopping-list-container');
+            container.innerHTML = '';
+
+            if(shoppingData.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 40px 20px; color: var(--text-sub);">還沒有加入任何想買的東西喔！<br>趕快在上方新增吧 👇</div>`;
+                return;
+            }
+
+            shoppingData.forEach((item) => {
+                const mapUrl = item.mapLink ? item.mapLink : `https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(item.name + ' 沖繩')}`;
+
+                const card = document.createElement('div');
+                card.className = 'stop';
+                card.innerHTML = `
+                    <div class="spot-card" style="margin-bottom: 0;">
+                        <div class="spot-title">
+                            ${item.name}
+                            <button onclick="deleteShoppingItem('${item.id}', '${item.img || ''}')" style="background:none; border:none; color:#E53935; font-size:1.1rem; cursor:pointer; padding:5px;">🗑️</button>
+                        </div>
+                        
+                        <div class="spot-actions" style="margin-top:10px;">
+                            <button class="btn-action btn-diary" onclick="toggleShopDiary('${item.id}')">📷 紀錄 / 連結</button>
+                            <a class="btn-action btn-map-quick" href="${mapUrl}" target="_blank">🗺️ 導航</a>
+                        </div>
+                        
+                        <div class="diary-area" id="shop-diary-${item.id}" style="display:none; margin-top:10px;">
+                            <label style="font-size:0.75rem; color:var(--text-sub); display:block; margin-bottom:5px;">📍 自訂 Google Map 連結</label>
+                            <input type="text" value="${item.mapLink || ''}" onchange="updateShopMapLink('${item.id}', this.value)" placeholder="請貼上地圖分享連結..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; margin-bottom:10px; font-size:0.9rem;">
+                            
+                            <textarea class="diary-text" onchange="updateShopText('${item.id}', this.value)" placeholder="寫下尺寸、顏色、價格或代購筆記...">${item.text || ''}</textarea>
+                            
+                            <div class="file-upload-wrapper">
+                                <div class="upload-container">
+                                    <div class="btn-upload">📎 新增照片</div>
+                                    <input type="file" accept="image/*" onchange="handleShopImageUpload(event, '${item.id}')">
+                                </div>
+                                <div class="btn-delete-photo" id="btn-del-shop-img-${item.id}" style="display:${item.img ? 'flex' : 'none'};" onclick="deleteShopImage('${item.id}', '${item.img}')">🗑️ 移除</div>
+                            </div>
+                            <div style="text-align:center; font-size:0.7rem; color:#888; display:none;" id="uploading-text-${item.id}">照片上傳雲端中，請稍候...⏳</div>
+                            <img class="diary-img-preview" id="shop-img-preview-${item.id}" src="${item.img || ''}" style="display:${item.img ? 'block' : 'none'};">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 必買清單專用 JavaScript 函式
+        window.toggleShopDiary = function(id) {
+            const area = document.getElementById(`shop-diary-${id}`);
+            area.style.display = area.style.display === 'none' ? 'block' : 'none';
+        }
+
+        window.updateShopMapLink = async function(id, value) {
+            await updateDoc(doc(db, "okinawa_shopping", id), { mapLink: value });
+            setTimeout(() => document.getElementById(`shop-diary-${id}`).style.display = 'block', 500); 
+        }
+
+        window.updateShopText = async function(id, value) {
+            await updateDoc(doc(db, "okinawa_shopping", id), { text: value });
+            setTimeout(() => document.getElementById(`shop-diary-${id}`).style.display = 'block', 500); 
+        }
+
+        window.handleShopImageUpload = function(event, id) {
+            const file = event.target.files[0];
+            if(!file) return;
+            
+            document.getElementById(`uploading-text-${id}`).style.display = 'block';
+
+            compressAndSaveImage(file, async (dataUrl) => {
+                document.getElementById(`shop-img-preview-${id}`).src = dataUrl;
+                document.getElementById(`shop-img-preview-${id}`).style.display = 'block';
+                
+                try {
+                    const storageRef = ref(storage, `okinawa_shopping_images/${id}_${Date.now()}.jpg`);
+                    await uploadString(storageRef, dataUrl, 'data_url');
+                    const downloadURL = await getDownloadURL(storageRef);
+                    await updateDoc(doc(db, "okinawa_shopping", id), { img: downloadURL });
+                    document.getElementById(`btn-del-shop-img-${id}`).style.display = 'flex';
+                } catch(error) {
+                    alert("上傳失敗，請確認 Firebase Storage 權限是否開啟！");
+                } finally {
+                    document.getElementById(`uploading-text-${id}`).style.display = 'none';
+                    setTimeout(() => document.getElementById(`shop-diary-${id}`).style.display = 'block', 500); 
+                }
+            });
+        }
+
+        window.deleteShopImage = async function(id, imgUrl) {
+            if(confirm('確定要從雲端移除這張照片嗎？')) {
+                document.getElementById(`shop-img-preview-${id}`).style.display = 'none';
+                document.getElementById(`btn-del-shop-img-${id}`).style.display = 'none';
+                
+                if(imgUrl && imgUrl.startsWith('http')) {
+                    try { await deleteObject(ref(storage, imgUrl)); } catch(e) {}
+                }
+                await updateDoc(doc(db, "okinawa_shopping", id), { img: '' });
+                setTimeout(() => document.getElementById(`shop-diary-${id}`).style.display = 'block', 500); 
+            }
+        }
+
+        window.addShoppingItem = async function() {
+            const input = document.getElementById('new-shop-item');
+            const name = input.value.trim();
+            if(!name) return alert("請輸入想買的物品名稱！");
+            input.value = '';
+            
+            await addDoc(collection(db, "okinawa_shopping"), {
+                name: name,
+                mapLink: '', 
+                text: '', 
+                img: '', 
+                createdAt: serverTimestamp()
+            });
+        }
+
+        window.deleteShoppingItem = async function(id, imgUrl) {
+            if(confirm('確定要刪除這筆雲端清單嗎？')) {
+                if(imgUrl && imgUrl.startsWith('http')) {
+                    try { await deleteObject(ref(storage, imgUrl)); } catch(e) {}
+                }
+                await deleteDoc(doc(db, "okinawa_shopping", id));
+            }
+        }
+
+        // === FIREBASE 11人雲端記帳本邏輯 ===
+        let expensesData = [];
+
+        const qExpense = query(collection(db, "okinawa_expenses"), orderBy("createdAt", "desc"));
+        onSnapshot(qExpense, (snapshot) => {
+            expensesData = [];
+            snapshot.forEach((doc) => {
+                expensesData.push({ id: doc.id, ...doc.data() });
+            });
+            renderCloudExpenses();
+        });
+
+        function renderCloudExpenses() {
+            const container = document.getElementById('expense-list-container'); 
+            container.innerHTML = '';
+            let totalTWD = 0; 
+            
+            let balances = {};
+            members.forEach(m => balances[m] = 0);
+
+            expensesData.forEach((exp) => {
+                const costTWD = Math.round(exp.amount * exp.rate); 
+                totalTWD += costTWD;
+                
+                if (exp.sharedBy && exp.sharedBy.length > 0) {
+                    const splitAmount = costTWD / exp.sharedBy.length;
+                    
+                    if(balances[exp.payer] !== undefined) {
+                        balances[exp.payer] += costTWD;
+                    }
+                    
+                    exp.sharedBy.forEach(person => {
+                        if(balances[person] !== undefined) {
+                            balances[person] -= splitAmount;
+                        }
+                    });
+                }
+
+                const sharedText = exp.sharedBy.length === 11 ? '全體平分' : `${exp.sharedBy.length}人分攤`;
+                container.innerHTML += `
+                    <div class="expense-item">
+                        <div class="exp-detail">
+                            <span class="exp-title">${exp.name}</span>
+                            <span class="exp-meta">${exp.payer} 先付 | ${sharedText}</span>
+                        </div>
+                        <div class="exp-price-box">
+                            <div class="exp-price">¥${exp.amount}</div>
+                            <div style="font-size:0.75rem; color:#888;">(NT$${costTWD})</div>
+                            <button onclick="deleteCloudExpense('${exp.id}')" style="background:none; border:none; color:#E74C3C; font-size:0.75rem; margin-top:4px; cursor:pointer; font-weight:bold;">刪除</button>
+                        </div>
+                    </div>`;
+            });
+
+            document.getElementById('calc-total-twd').innerText = `$${totalTWD.toLocaleString()}`;
+            
+            calculateSettlement(balances);
+        }
+
+        function calculateSettlement(balances) {
+            let debtors = []; 
+            let creditors = []; 
+
+            for (const [name, balance] of Object.entries(balances)) {
+                if (balance < -1) debtors.push({ name, amount: Math.abs(balance) }); 
+                else if (balance > 1) creditors.push({ name, amount: balance });
+            }
+
+            debtors.sort((a, b) => b.amount - a.amount);
+            creditors.sort((a, b) => b.amount - a.amount);
+
+            let settlementResults = [];
+            let dIndex = 0;
+            let cIndex = 0;
+
+            while (dIndex < debtors.length && cIndex < creditors.length) {
+                let debtor = debtors[dIndex];
+                let creditor = creditors[cIndex];
+
+                let payAmount = Math.min(debtor.amount, creditor.amount);
+                
+                if (payAmount >= 1) { 
+                    settlementResults.push(`${debtor.name} 給 ➔ ${creditor.name} <span class="settlement-amount">$${Math.round(payAmount)}</span>`);
+                }
+
+                debtor.amount -= payAmount;
+                creditor.amount -= payAmount;
+
+                if (debtor.amount < 1) dIndex++;
+                if (creditor.amount < 1) cIndex++;
+            }
+
+            const settlementContainer = document.getElementById('settlement-container');
+            const listEl = document.getElementById('settlement-list');
+            
+            if (settlementResults.length > 0) {
+                settlementContainer.style.display = 'block';
+                listEl.innerHTML = settlementResults.map(res => `<div class="settlement-row">${res}</div>`).join('');
+            } else {
+                settlementContainer.style.display = 'block';
+                listEl.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-sub);">✅ 目前所有帳務結清，大家互不相欠！</div>`;
+            }
+        }
+
+        window.addExpense = async function() {
+            const name = document.getElementById('exp-name').value; 
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+            const payer = document.getElementById('exp-payer').value; 
+            const rate = parseFloat(document.getElementById('exp-rate').value);
+            
+            const checkedBoxes = document.querySelectorAll('.split-cb:checked');
+            const sharedBy = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            if (!name || isNaN(amount)) return alert("請輸入消費項目名稱與日幣總金額！");
+            if (sharedBy.length === 0) return alert("請至少勾選一位分攤人！");
+
+            await addDoc(collection(db, "okinawa_expenses"), {
+                name: name, amount: amount, payer: payer, sharedBy: sharedBy, rate: rate, createdAt: serverTimestamp()
+            });
+
+            document.getElementById('exp-name').value = ''; 
+            document.getElementById('exp-amount').value = ''; 
+            window.scrollTo({ top: document.getElementById('expense-list-container').offsetTop - 50, behavior: 'smooth' });
+        }
+
+        window.deleteCloudExpense = async function(id) { 
+            if(confirm('確定要刪除這筆雲端帳目嗎？\n注意：這會立刻影響 11 人的最終結算金額！')) {
+                await deleteDoc(doc(db, "okinawa_expenses", id));
+            }
+        }
+    </script>
+</body>
+</html>
