@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Okinawa 王陳府沖繩開游</title>
+    <title>Okinawa 王陳府沖繩</title>
     <meta name="theme-color" content="#FFFFFF">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -74,7 +74,7 @@
         .modal-content { max-width: 95%; max-height: 80%; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); object-fit: contain;}
         .close-modal { color: white; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px;}
 
-        /* 底部五格導航 (已擴充為五格) */
+        /* 底部五格導航 */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.02);}
         .nav-item { text-align: center; color: var(--text-sub); font-size: 0.65rem; cursor: pointer; flex: 1; transition: 0.2s;} 
         .nav-item.active { color: var(--primary); font-weight: 700; transform: translateY(-2px);} 
@@ -409,7 +409,7 @@
                         <option value="鈺婷">鈺婷</option><option value="嘉">嘉</option>
                         <option value="信翰">信翰</option><option value="阿德">阿德</option>
                         <option value="小貞">小貞</option><option value="語彤">語彤</option>
-                        <option value="宇詰">宇詰</option><option value="竫椏">竫椏</option>
+                        <option value="羽頡">羽頡</option><option value="竫椏">竫椏</option>
                         <option value="亮勳">亮勳</option>
                     </select>
                 </div>
@@ -455,7 +455,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // 新增了 setDoc 來做為完美的雲端寫入機制
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, setDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -497,7 +498,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 開啟優惠券對話框
         window.openCoupon = function(imageName) {
             document.getElementById('coupon-img').src = imageName;
             document.getElementById('coupon-modal').style.display = 'flex';
@@ -545,6 +545,9 @@
             reader.readAsDataURL(file);
         }
 
+        // =======================
+        // 行程筆記與照片 (全面上傳 Firebase 雲端版)
+        // =======================
         document.addEventListener("DOMContentLoaded", () => {
             const spotCards = document.querySelectorAll('#view-itinerary .spot-card');
             spotCards.forEach((card, index) => {
@@ -571,9 +574,14 @@
                 diaryArea.className = 'diary-area'; diaryArea.style.display = 'none';
 
                 const textArea = document.createElement('textarea');
-                textArea.className = 'diary-text'; textArea.placeholder = '寫下這站的趣事或花費...';
-                if(localStorage.getItem(`oki_diary_text_${index}`)) textArea.value = localStorage.getItem(`oki_diary_text_${index}`);
-                textArea.addEventListener('input', (e) => localStorage.setItem(`oki_diary_text_${index}`, e.target.value));
+                textArea.className = 'diary-text'; 
+                textArea.id = `diary-text-${index}`; 
+                textArea.placeholder = '寫下這站的趣事或花費... (自動同步雲端)';
+                
+                // 改用 'change' 事件，輸入完點擊旁邊空白處才會將資料寫入雲端，避免頻繁寫入浪費流量
+                textArea.addEventListener('change', (e) => {
+                    setDoc(doc(db, "okinawa_diaries", `spot_${index}`), { text: e.target.value }, { merge: true });
+                });
 
                 const uploadWrapper = document.createElement('div');
                 uploadWrapper.className = 'file-upload-wrapper';
@@ -587,37 +595,100 @@
                 uploadContainer.appendChild(fileInput);
 
                 const deleteBtn = document.createElement('div');
-                deleteBtn.className = 'btn-delete-photo'; deleteBtn.innerHTML = '🗑️ 移除照片';
+                deleteBtn.className = 'btn-delete-photo'; 
+                deleteBtn.id = `btn-del-img-${index}`; 
+                deleteBtn.innerHTML = '🗑️ 移除照片';
 
                 uploadWrapper.appendChild(uploadContainer); uploadWrapper.appendChild(deleteBtn);
 
+                const uploadingText = document.createElement('div'); 
+                uploadingText.id = `uploading-text-spot-${index}`;
+                uploadingText.style.cssText = "text-align:center; font-size:0.75rem; color:var(--primary); display:none; margin-bottom:5px; font-weight:bold;";
+                uploadingText.innerText = "照片上傳雲端中，請稍候...⏳";
+
                 const imgPreview = document.createElement('img');
                 imgPreview.className = 'diary-img-preview';
-                
-                if(localStorage.getItem(`oki_diary_img_${index}`)) {
-                    imgPreview.src = localStorage.getItem(`oki_diary_img_${index}`);
-                    imgPreview.style.display = 'block'; deleteBtn.style.display = 'flex';
-                }
+                imgPreview.id = `diary-img-${index}`;
 
+                // 處理行程照片上傳 (至 Firebase Storage)
                 fileInput.addEventListener('change', (e) => {
-                    if(e.target.files[0]) {
-                        compressAndSaveImage(e.target.files[0], (dataUrl) => {
-                            imgPreview.src = dataUrl; imgPreview.style.display = 'block'; deleteBtn.style.display = 'flex';
-                            try { localStorage.setItem(`oki_diary_img_${index}`, dataUrl); } catch (err) { alert('手機暫存空間已滿！'); }
-                        });
+                    const file = e.target.files[0];
+                    if(!file) return;
+
+                    uploadingText.style.display = 'block';
+
+                    compressAndSaveImage(file, async (dataUrl) => {
+                        imgPreview.src = dataUrl;
+                        imgPreview.style.display = 'block';
+
+                        try {
+                            const storageRef = ref(storage, `okinawa_itinerary_images/spot_${index}_${Date.now()}.jpg`);
+                            await uploadString(storageRef, dataUrl, 'data_url');
+                            const downloadURL = await getDownloadURL(storageRef);
+                            // 寫入圖片網址到 Firestore
+                            await setDoc(doc(db, "okinawa_diaries", `spot_${index}`), { img: downloadURL }, { merge: true });
+                            deleteBtn.style.display = 'flex';
+                        } catch (err) {
+                            alert('上傳失敗，請確認網路連線或金鑰權限！');
+                        } finally {
+                            uploadingText.style.display = 'none';
+                            fileInput.value = '';
+                        }
+                    });
+                });
+
+                // 處理雲端照片刪除
+                deleteBtn.addEventListener('click', async () => {
+                    if(confirm('確定要從雲端移除這張照片嗎？(11人皆會同步刪除)')) {
+                        const imgUrl = imgPreview.src;
+                        imgPreview.src = '';
+                        imgPreview.style.display = 'none';
+                        deleteBtn.style.display = 'none';
+
+                        if(imgUrl && imgUrl.startsWith('http')) {
+                            try { await deleteObject(ref(storage, imgUrl)); } catch(e) {}
+                        }
+                        await setDoc(doc(db, "okinawa_diaries", `spot_${index}`), { img: '' }, { merge: true });
                     }
                 });
 
-                deleteBtn.addEventListener('click', () => {
-                    if(confirm('確定要移除這張照片嗎？')) {
-                        localStorage.removeItem(`oki_diary_img_${index}`);
-                        imgPreview.src = ''; imgPreview.style.display = 'none'; deleteBtn.style.display = 'none'; fileInput.value = '';
-                    }
-                });
-
-                diaryArea.appendChild(textArea); diaryArea.appendChild(uploadWrapper); diaryArea.appendChild(imgPreview);
+                diaryArea.appendChild(textArea); 
+                diaryArea.appendChild(uploadWrapper); 
+                diaryArea.appendChild(uploadingText);
+                diaryArea.appendChild(imgPreview);
                 card.appendChild(diaryArea);
                 diaryBtn.addEventListener('click', () => diaryArea.style.display = diaryArea.style.display === 'none' ? 'block' : 'none');
+            });
+
+            // 實時監聽：將雲端的照片與文字同步回大家的畫面上
+            const qDiary = query(collection(db, "okinawa_diaries"));
+            onSnapshot(qDiary, (snapshot) => {
+                snapshot.forEach((docSnap) => {
+                    const id = docSnap.id; // 格式如 "spot_0"
+                    const index = id.replace('spot_', '');
+                    const data = docSnap.data();
+
+                    const textArea = document.getElementById(`diary-text-${index}`);
+                    // 如果用戶正在打字，就不要覆蓋他現在輸入的東西
+                    if (textArea && document.activeElement !== textArea) {
+                        textArea.value = data.text || '';
+                    }
+
+                    const imgPreview = document.getElementById(`diary-img-${index}`);
+                    const deleteBtn = document.getElementById(`btn-del-img-${index}`);
+
+                    if (imgPreview && deleteBtn) {
+                        if (data.img && imgPreview.src !== data.img) {
+                            imgPreview.src = data.img;
+                            imgPreview.style.display = 'block';
+                            deleteBtn.style.display = 'flex';
+                        } else if (!data.img) {
+                            imgPreview.src = '';
+                            imgPreview.style.display = 'none';
+                            deleteBtn.style.display = 'none';
+                        }
+                    }
+                });
             });
         });
 
