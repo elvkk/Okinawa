@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Okinawa 沖繩夏日漫遊 (11人連線版)</title>
+    <title>Okinawa 王陳府沖繩開游</title>
     <meta name="theme-color" content="#FFFFFF">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -59,8 +59,22 @@
         .guide-box { background-color: var(--primary-light); padding: 10px 12px; border-radius: 8px; margin-top: 6px; font-size: 0.85rem; line-height: 1.5; color: #2C3E50; border-left: 4px solid var(--primary);}
         .tag { padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white; display: inline-block; margin-bottom: 4px; margin-right: 4px;}
         .tag.food { background-color: var(--tag-food); }
+
+        /* MapCode 樣式 */
+        .nav-info { background: #F4F9F9; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-top: 8px; border: 1px dashed #B2DFDB;}
+        .car-code { font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
         
-        /* 底部五格導航 */
+        /* 優惠券樣式 */
+        .coupon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px; }
+        .coupon-btn { background: #FFF; border: 2px solid var(--border); padding: 15px 10px; border-radius: 12px; text-align: center; font-weight: bold; color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; }
+        .coupon-btn:active { background: #E0F2F1; border-color: var(--primary); }
+        .coupon-icon { font-size: 1.8rem; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(5px);}
+        .modal-content { max-width: 95%; max-height: 80%; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); object-fit: contain;}
+        .close-modal { color: white; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px;}
+
+        /* 底部五格導航 (已擴充為五格) */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.02);}
         .nav-item { text-align: center; color: var(--text-sub); font-size: 0.65rem; cursor: pointer; flex: 1; transition: 0.2s;} 
         .nav-item.active { color: var(--primary); font-weight: 700; transform: translateY(-2px);} 
@@ -137,8 +151,22 @@
         <div id="d1" class="tab-content active">
             <div class="day-header"><div class="day-title">Day 1｜抵達沖繩 恩納村</div><div class="weather-box" id="w-d1"></div></div>
             <div class="timeline">
-                <div class="stop"><div class="time">16:00</div><div class="spot-card"><div class="subway bg-flight">✈️ 航班</div><div class="spot-title">抵達那霸機場</div><div class="spot-desc">機場取車，準備出發前往恩納村！</div></div></div>
-                <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-shop">🛒 購物</div><div class="spot-title">MaxValu 伊嘉店</div><div class="guide-box">超市補貨 (24小時營業)</div></div></div>
+                <div class="stop">
+                    <div class="time">16:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-flight">✈️ 航班</div><div class="spot-title">抵達那霸機場</div>
+                        <div class="spot-desc">機場取車，準備出發前往恩納村！</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 123 279*00</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">18:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-shop">🛒 購物</div><div class="spot-title">MaxValu 伊嘉店</div>
+                        <div class="guide-box">超市補貨 (24小時營業)</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">206 096 886*55</span></div>
+                    </div>
+                </div>
                 <div class="stop"><div class="time">19:30</div><div class="spot-card"><div class="subway bg-food">🍱 晚餐</div><div class="spot-title">晚餐：外送</div><div class="spot-desc">享受第一晚的悠閒時光</div></div></div>
             </div>
         </div>
@@ -147,9 +175,30 @@
             <div class="day-header"><div class="day-title">Day 2｜古宇利島與海洋之美</div><div class="weather-box" id="w-d2"></div></div>
             <div class="timeline">
                 <div class="stop"><div class="time">08:30</div><div class="spot-card"><div class="subway bg-food">🍙 早餐</div><div class="spot-title">Pork Tamago Onigiri</div><div class="guide-box"><span class="tag food">必吃</span> 沖繩經典豬肉蛋飯糰</div></div></div>
-                <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">古宇利島 + 海洋塔</div><div class="spot-desc">開車跨越絕美古宇利大橋，俯瞰漸層沖繩藍</div></div></div>
-                <div class="stop"><div class="time">12:30</div><div class="spot-card"><div class="subway bg-food">🍜 午餐</div><div class="spot-title">岸本食堂 或 亞熱帶園</div><div class="guide-box"><span class="tag food">推薦</span> 百年木灰蕎麥麵 / 山原亞熱帶園蕎麥麵</div></div></div>
-                <div class="stop"><div class="time">14:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">美麗海水族館</div><div class="spot-desc">看黑潮之海的鯨鯊！(備案：部瀨名搭玻璃船)</div></div></div>
+                <div class="stop">
+                    <div class="time">10:30</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">古宇利島 + 海洋塔</div>
+                        <div class="spot-desc">開車跨越絕美古宇利大橋，俯瞰漸層沖繩藍</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">206 312 038*55</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">12:30</div>
+                    <div class="spot-card">
+                        <div class="subway bg-food">🍜 午餐</div><div class="spot-title">岸本食堂 或 亞熱帶園</div>
+                        <div class="guide-box"><span class="tag food">推薦</span> 百年木灰蕎麥麵 / 山原亞熱帶園蕎麥麵</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">206 857 712*71</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">14:30</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">美麗海水族館</div>
+                        <div class="spot-desc">看黑潮之海的鯨鯊！(備案：部瀨名搭玻璃船)</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">553 075 797*77</span></div>
+                    </div>
+                </div>
                 <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-food">🍽️ 晚餐</div><div class="spot-title">晚餐：自由活動</div></div></div>
             </div>
         </div>
@@ -157,11 +206,46 @@
         <div id="d3" class="tab-content">
             <div class="day-header"><div class="day-title">Day 3｜打卡秘境與逛街血拼</div><div class="weather-box" id="w-d3"></div></div>
             <div class="timeline">
-                <div class="stop"><div class="time">09:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">萬座毛</div><div class="spot-desc">欣賞大自然的鬼斧神工，象鼻岩石</div></div></div>
-                <div class="stop"><div class="time">10:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">琉球村</div><div class="spot-desc">體驗傳統琉球文化與古民家</div></div></div>
-                <div class="stop"><div class="time">13:00</div><div class="spot-card"><div class="subway bg-food">🍔 午餐</div><div class="spot-title">A&W漢堡 牧港店</div><div class="guide-box"><span class="tag food">必吃</span> 沖繩限定美式復古漢堡</div></div></div>
-                <div class="stop"><div class="time">14:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">港川外人住宅</div><div class="guide-box">✅ 做香水的小店<br>✅ 彩色小屋拍照<br>✅ 甜點 oHacorté 水果塔</div></div></div>
-                <div class="stop"><div class="time">16:00</div><div class="spot-card"><div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">PARCO CITY 逛街</div><div class="spot-desc">沖繩最大級海岸複合商場，準備大採購</div></div></div>
+                <div class="stop">
+                    <div class="time">09:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">萬座毛</div>
+                        <div class="spot-desc">欣賞大自然的鬼斧神工，象鼻岩石</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">206 312 039*17</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">10:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">琉球村</div>
+                        <div class="spot-desc">體驗傳統琉球文化與古民家</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">206 033 065*58</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">13:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-food">🍔 午餐</div><div class="spot-title">A&W漢堡 牧港店</div>
+                        <div class="guide-box"><span class="tag food">必吃</span> 沖繩限定美式復古漢堡</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 371 054*41</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">14:30</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">港川外人住宅</div>
+                        <div class="guide-box">✅ 做香水的小店<br>✅ 彩色小屋拍照<br>✅ 甜點 oHacorté 水果塔</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 341 002*41</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">16:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">PARCO CITY 逛街</div>
+                        <div class="spot-desc">沖繩最大級海岸複合商場，準備大採購</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 339 065*17</span></div>
+                    </div>
+                </div>
                 <div class="stop"><div class="time">18:00</div><div class="spot-card"><div class="subway bg-food">🥘 晚餐</div><div class="spot-title">民宿開伙</div><div class="spot-desc">San-A超市買食材回民宿煮</div></div></div>
             </div>
         </div>
@@ -170,21 +254,83 @@
             <div class="day-header"><div class="day-title">Day 4｜美式風情與 Outlet</div><div class="weather-box" id="w-d4"></div></div>
             <div class="timeline">
                 <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">離開恩納往南</div><div class="spot-desc">辦理退房</div></div></div>
-                <div class="stop"><div class="time">11:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">美國村</div><div class="guide-box">✅ King Side Breakfast & Burger<br>✅ Blue Seal 冰淇淋 (北谷店)</div></div></div>
-                <div class="stop"><div class="time">14:00</div><div class="spot-card"><div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">Ashibinaa Outlet</div><div class="spot-desc">精品折扣尋寶去</div></div></div>
-                <div class="stop"><div class="time">17:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">入住那霸飯店</div></div></div>
-                <div class="stop"><div class="time">19:00</div><div class="spot-card"><div class="subway bg-food">🎶 晚餐</div><div class="spot-title">國際通 (島唄餐廳)</div><div class="spot-desc">邊聽三線琴邊享用沖繩料理</div></div></div>
+                <div class="stop">
+                    <div class="time">11:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">美國村</div>
+                        <div class="guide-box">✅ King Side Breakfast & Burger<br>✅ Blue Seal 冰淇淋 (北谷店)</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 526 450*63</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">14:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-shop">🛍️ 購物</div><div class="spot-title">Ashibinaa Outlet</div>
+                        <div class="spot-desc">精品折扣尋寶去</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">232 544 452*22</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">17:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">入住那霸飯店</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">飯店地址自行確認</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">19:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-food">🎶 晚餐</div><div class="spot-title">國際通 (島唄餐廳)</div>
+                        <div class="spot-desc">邊聽三線琴邊享用沖繩料理</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 157 435*38</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="d5" class="tab-content">
             <div class="day-header"><div class="day-title">Day 5｜歷史文化與瀨長島</div><div class="weather-box" id="w-d5"></div></div>
             <div class="timeline">
-                <div class="stop"><div class="time">09:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">首里城</div><div class="spot-desc">世界文化遺產，琉球王國的榮耀</div></div></div>
-                <div class="stop"><div class="time">10:30</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">玉泉洞</div><div class="spot-desc">日本第二大鐘乳石洞</div></div></div>
-                <div class="stop"><div class="time">13:00</div><div class="spot-card"><div class="subway bg-food">🦞 午餐</div><div class="spot-title">系滿魚市場</div><div class="guide-box"><span class="tag food">必吃</span> 新鮮海鮮、生魚片、焗烤龍蝦</div></div></div>
-                <div class="stop"><div class="time">14:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">達摩寺</div><div class="spot-desc">祈求好運的特色寺廟</div></div></div>
-                <div class="stop"><div class="time">15:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">瀨長島</div><div class="spot-desc">被稱為沖繩小希臘，看海看飛機起降的絕佳地點</div></div></div>
+                <div class="stop">
+                    <div class="time">09:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">首里城</div>
+                        <div class="spot-desc">世界文化遺產，琉球王國的榮耀</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 161 526*66</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">10:30</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">玉泉洞</div>
+                        <div class="spot-desc">日本第二大鐘乳石洞</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">232 495 330*28</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">13:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-food">🦞 午餐</div><div class="spot-title">系滿魚市場</div>
+                        <div class="guide-box"><span class="tag food">必吃</span> 新鮮海鮮、生魚片、焗烤龍蝦</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">232 484 136*74</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">14:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">達摩寺</div>
+                        <div class="spot-desc">祈求好運的特色寺廟</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 128 340*32</span></div>
+                    </div>
+                </div>
+                <div class="stop">
+                    <div class="time">15:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">瀨長島</div>
+                        <div class="spot-desc">被稱為沖繩小希臘，看海看飛機起降的絕佳地點</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 002 602*06</span></div>
+                    </div>
+                </div>
                 <div class="stop"><div class="time">19:00</div><div class="spot-card"><div class="subway bg-food">🍽️ 晚餐</div><div class="spot-title">晚餐：自由活動</div></div></div>
             </div>
         </div>
@@ -193,7 +339,14 @@
             <div class="day-header"><div class="day-title">Day 6｜市場巡禮與歸途</div><div class="weather-box" id="w-d6"></div></div>
             <div class="timeline">
                 <div class="stop"><div class="time">08:30</div><div class="spot-card"><div class="subway bg-food">🍳 早餐</div><div class="spot-title">旅の終わりの朝ごはん</div><div class="spot-desc">享受旅程最後的美好早餐</div></div></div>
-                <div class="stop"><div class="time">10:00</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">第一牧志公設市場</div><div class="spot-desc">沖繩人的廚房，或是自由活動最後採買</div></div></div>
+                <div class="stop">
+                    <div class="time">10:00</div>
+                    <div class="spot-card">
+                        <div class="subway bg-car">🚗 自駕</div><div class="spot-title">第一牧志公設市場</div>
+                        <div class="spot-desc">沖繩人的廚房，或是自由活動最後採買</div>
+                        <div class="nav-info">📍 導航 MapCode: <span class="car-code">33 157 264*62</span></div>
+                    </div>
+                </div>
                 <div class="stop"><div class="time">14:45</div><div class="spot-card"><div class="subway bg-car">🚗 自駕</div><div class="spot-title">抵達機場還車</div></div></div>
                 <div class="stop"><div class="time">16:45</div><div class="spot-card"><div class="subway bg-flight">✈️ 航班</div><div class="spot-title">飛機起飛</div><div class="spot-desc">帶著滿滿回憶平安回家！</div></div></div>
             </div>
@@ -201,13 +354,38 @@
     </div>
 
     <div id="view-maps" style="display: none; padding: 20px;">
-        <div class="day-title" style="text-align: center; margin-bottom: 20px;">🗺️ 沖繩每日導航路線包</div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🚗 Day 1｜機場抵達恩納</div><a href="https://www.google.com/maps/dir/Naha+Airport/MaxValu+Ika/Enna,+Okinawa" target="_blank" class="btn-maps-main">📍 點我開啟 D1 導航</a></div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏝️ Day 2｜古宇利與水族館</div><a href="https://www.google.com/maps/dir/Enna,+Okinawa/Kouri+Island/Kishimoto+Shokudo/Okinawa+Churaumi+Aquarium" target="_blank" class="btn-maps-main">📍 點我開啟 D2 導航</a></div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🍔 Day 3｜外人住宅與購物</div><a href="https://www.google.com/maps/dir/Manzamo/Ryukyu+Mura/A%26W+Makiminato/Minatogawa+Stateside+Town/PARCO+CITY" target="_blank" class="btn-maps-main">📍 點我開啟 D3 導航</a></div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🎡 Day 4｜美國村與國際通</div><a href="https://www.google.com/maps/dir/Enna/American+Village/Ashibinaa+Outlet/Kokusai+Dori" target="_blank" class="btn-maps-main">📍 點我開啟 D4 導航</a></div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏯 Day 5｜首里城與瀨長島</div><a href="https://www.google.com/maps/dir/Shuri+Castle/Gyokusendo/Itoman+Fish+Market/Daruma-dera/Senagajima" target="_blank" class="btn-maps-main">📍 點我開啟 D5 導航</a></div>
-        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🐟 Day 6｜牧志市場與機場</div><a href="https://www.google.com/maps/dir/Makishi+Public+Market/Naha+Airport" target="_blank" class="btn-maps-main">📍 點我開啟 D6 導航</a></div>
+        <div class="day-title" style="text-align: center; margin-bottom: 20px;">🗺️ 每日多站點串聯導航路線</div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🚗 Day 1｜機場抵達 ➔ 超市 ➔ 恩納</div><a href="https://www.google.com/maps/dir/Naha+Airport/MaxValu+Ika+Okinawa/Onna+Okinawa/" target="_blank" class="btn-maps-main">📍 點我開啟 D1 一鍵連線導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏝️ Day 2｜古宇利 ➔ 岸本食堂 ➔ 水族館</div><a href="https://www.google.com/maps/dir/Onna+Okinawa/Kouri+Ocean+Tower/Kishimoto+Shokudo/Churaumi+Aquarium/" target="_blank" class="btn-maps-main">📍 點我開啟 D2 一鍵連線導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🍔 Day 3｜萬座毛 ➔ 琉球村 ➔ 外人住宅 ➔ PARCO</div><a href="https://www.google.com/maps/dir/Onna+Okinawa/Manzamo/Ryukyu+Mura/A%26W+Makiminato/Minatogawa+Stateside+Town/PARCO+CITY+Okinawa/" target="_blank" class="btn-maps-main">📍 點我開啟 D3 一鍵連線導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🎡 Day 4｜美國村 ➔ Outlet ➔ 國際通</div><a href="https://www.google.com/maps/dir/Onna+Okinawa/American+Village/Ashibinaa+Outlet/Kokusai+Dori/" target="_blank" class="btn-maps-main">📍 點我開啟 D4 一鍵連線導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🏯 Day 5｜首里城 ➔ 玉泉洞 ➔ 魚市場 ➔ 瀨長島</div><a href="https://www.google.com/maps/dir/Naha+Okinawa/Shurijo+Castle/Gyokusendo/Itoman+Fish+Market/Senagajima/" target="_blank" class="btn-maps-main">📍 點我開啟 D5 一鍵連線導航</a></div>
+        <div class="spot-card" style="margin-bottom: 15px;"><div class="spot-title" style="color: var(--primary);">🐟 Day 6｜牧志市場 ➔ 那霸機場歸途</div><a href="https://www.google.com/maps/dir/Naha+Okinawa/Makishi+Public+Market/Naha+Airport/" target="_blank" class="btn-maps-main">📍 點我開啟 D6 一鍵連線導航</a></div>
+    </div>
+
+    <div id="view-coupons" style="display: none;">
+        <div class="header-decor" style="font-size:1.1rem; padding-bottom:5px;">🏷️ 出示手機條碼立享折扣</div>
+        <div class="coupon-grid">
+            <div class="coupon-btn" onclick="openCoupon('BigCamera.jpg')"><span class="coupon-icon">📷</span>BicCamera</div>
+            <div class="coupon-btn" onclick="openCoupon('COSMOS.jpg')"><span class="coupon-icon">🌸</span>COSMOS</div>
+            <div class="coupon-btn" onclick="openCoupon('LALA PORT.jpg')"><span class="coupon-icon">🛍️</span>LALA PORT</div>
+            <div class="coupon-btn" onclick="openCoupon('SUGI藥妝.jpg')"><span class="coupon-icon">💊</span>SUGI藥妝</div>
+            <div class="coupon-btn" onclick="openCoupon('welcia.jpg')"><span class="coupon-icon">⚕️</span>welcia</div>
+            <div class="coupon-btn" onclick="openCoupon('大丸百貨.jpg')"><span class="coupon-icon">🏬</span>大丸百貨</div>
+            <div class="coupon-btn" onclick="openCoupon('大國藥妝.jpg')"><span class="coupon-icon">💊</span>大國藥妝</div>
+            <div class="coupon-btn" onclick="openCoupon('山田電機.jpg')"><span class="coupon-icon">🔌</span>山田電機</div>
+            <div class="coupon-btn" onclick="openCoupon('多慶屋.jpg')"><span class="coupon-icon">🛒</span>多慶屋</div>
+            <div class="coupon-btn" onclick="openCoupon('松本清.jpg')"><span class="coupon-icon">🟡</span>松本清</div>
+            
+            <div class="coupon-btn" onclick="openCoupon('唐吉訶德.jpg')"><span class="coupon-icon">🐧</span>唐吉訶德</div>
+            <div class="coupon-btn" onclick="openCoupon('AEON.jpg')"><span class="coupon-icon">🟣</span>AEON 永旺</div>
+            <div class="coupon-btn" onclick="openCoupon('愛電王.jpg')"><span class="coupon-icon">⚡</span>愛電王</div>
+        </div>
+    </div>
+
+    <div id="coupon-modal" class="modal" onclick="this.style.display='none'">
+        <span class="close-modal">✖ 點此關閉條碼</span>
+        <img class="modal-content" id="coupon-img" src="">
     </div>
 
     <div id="view-accounting" style="display: none;">
@@ -269,6 +447,7 @@
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-itinerary" onclick="switchMainTab('itinerary')"><span class="nav-icon">🗺️</span>行程</div>
         <div class="nav-item" id="nav-maps" onclick="switchMainTab('maps')"><span class="nav-icon">📍</span>導航</div>
+        <div class="nav-item" id="nav-coupons" onclick="switchMainTab('coupons')"><span class="nav-icon">🎫</span>優惠券</div>
         <div class="nav-item" id="nav-shopping" onclick="switchMainTab('shopping')"><span class="nav-icon">🛍️</span>必買</div>
         <div class="nav-item" id="nav-accounting" onclick="switchMainTab('accounting')"><span class="nav-icon">💰</span>記帳本</div>
     </div>
@@ -317,9 +496,16 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // 開啟優惠券對話框
+        window.openCoupon = function(imageName) {
+            document.getElementById('coupon-img').src = imageName;
+            document.getElementById('coupon-modal').style.display = 'flex';
+        }
+
         window.switchMainTab = function(tabName) {
             document.getElementById('view-itinerary').style.display = tabName === 'itinerary' ? 'block' : 'none';
             document.getElementById('view-maps').style.display = tabName === 'maps' ? 'block' : 'none';
+            document.getElementById('view-coupons').style.display = tabName === 'coupons' ? 'block' : 'none';
             document.getElementById('view-shopping').style.display = tabName === 'shopping' ? 'block' : 'none';
             document.getElementById('view-accounting').style.display = tabName === 'accounting' ? 'block' : 'none';
             
@@ -370,8 +556,8 @@
 
                 const mapBtn = document.createElement('a');
                 mapBtn.className = 'btn-action btn-map-quick';
-                mapBtn.href = `https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(spotName + ' 沖繩')}`;
-                mapBtn.target = '_blank'; mapBtn.innerHTML = '🗺️ 導航';
+                mapBtn.href = `https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(spotName + ' 沖繩')}`;
+                mapBtn.target = '_blank'; mapBtn.innerHTML = '🗺️ 單站導航';
 
                 const diaryBtn = document.createElement('button');
                 diaryBtn.className = 'btn-action btn-diary';
@@ -435,7 +621,7 @@
         });
 
         // =======================
-        // FIREBASE 必買清單邏輯更新
+        // FIREBASE 必買清單邏輯
         // =======================
         let shoppingData = []; 
         const qShop = query(collection(db, "okinawa_shopping"), orderBy("createdAt", "desc"));
@@ -458,7 +644,7 @@
             }
 
             shoppingData.forEach((item) => {
-                const mapUrl = item.mapLink ? item.mapLink : `https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(item.name + ' 沖繩')}`;
+                const mapUrl = item.mapLink ? item.mapLink : `https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(item.name + ' 沖繩')}`;
 
                 const card = document.createElement('div');
                 card.className = 'stop';
@@ -496,7 +682,6 @@
             });
         }
 
-        // 必買清單專用 JavaScript 函式
         window.toggleShopDiary = function(id) {
             const area = document.getElementById(`shop-diary-${id}`);
             area.style.display = area.style.display === 'none' ? 'block' : 'none';
